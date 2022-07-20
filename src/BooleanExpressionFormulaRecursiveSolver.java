@@ -2,25 +2,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+enum NodeType {CONSTANT, OPERATOR, VARIABLE}
+enum Operator {AND, OR, NOT, IMPLICATION, MATERIAL_IMPLICATION}
+
 abstract class Node<T> {
-    protected BooleanExpressionFormulaRecursiveSolver.NodeType nodeType;
+    protected NodeType nodeType;
     protected T value;
     protected Node lChild;
     protected Node rChild;
 
-    public Node(BooleanExpressionFormulaRecursiveSolver.NodeType nodeType, T value) {
+    public Node(NodeType nodeType, T value) {
         this.nodeType = nodeType;
         this.value = value;
     }
 
-    public Node(BooleanExpressionFormulaRecursiveSolver.NodeType nodeType, T value, Node lChild, Node rChild) {
+    public Node(NodeType nodeType, T value, Node lChild, Node rChild) {
         this.nodeType = nodeType;
         this.value = value;
         this.lChild = lChild;
         this.rChild = rChild;
     }
 
-    public BooleanExpressionFormulaRecursiveSolver.NodeType getType() {
+    public NodeType getType() {
         return this.nodeType;
     }
 
@@ -39,28 +42,28 @@ abstract class Node<T> {
 
 class ConstantNode extends Node<Boolean> {
     public ConstantNode(boolean val) {
-        super(BooleanExpressionFormulaRecursiveSolver.NodeType.CONSTANT, val);
+        super(NodeType.CONSTANT, val);
     }
     public ConstantNode(boolean val, Node lNode, Node rNode) {
-        super(BooleanExpressionFormulaRecursiveSolver.NodeType.CONSTANT, val, lNode, rNode);
+        super(NodeType.CONSTANT, val, lNode, rNode);
     }
 }
 
-class OperatorNode extends Node<BooleanExpressionFormulaRecursiveSolver.Operator> {
-    public OperatorNode(BooleanExpressionFormulaRecursiveSolver.Operator operator) {
-        super(BooleanExpressionFormulaRecursiveSolver.NodeType.OPERATOR, operator);
+class OperatorNode extends Node<Operator> {
+    public OperatorNode(Operator operator) {
+        super(NodeType.OPERATOR, operator);
     }
-    public OperatorNode(BooleanExpressionFormulaRecursiveSolver.Operator operator, Node lNode, Node rNode) {
-        super(BooleanExpressionFormulaRecursiveSolver.NodeType.OPERATOR, operator, lNode, rNode);
+    public OperatorNode(Operator operator, Node lNode, Node rNode) {
+        super(NodeType.OPERATOR, operator, lNode, rNode);
     }
 }
 
 class VariableNode extends Node<Variable> {
     public VariableNode(Variable variable) {
-        super(BooleanExpressionFormulaRecursiveSolver.NodeType.VARIABLE, variable);
+        super(NodeType.VARIABLE, variable);
     }
     public VariableNode(Variable variable, Node lNode, Node rNode) {
-        super(BooleanExpressionFormulaRecursiveSolver.NodeType.VARIABLE, variable, lNode, rNode);
+        super(NodeType.VARIABLE, variable, lNode, rNode);
     }
 }
 
@@ -94,8 +97,6 @@ class Variable {
 }
 
 public class BooleanExpressionFormulaRecursiveSolver {
-    enum NodeType {CONSTANT, OPERATOR, VARIABLE}
-    enum Operator {AND, OR, NOT, IMPLICATION, MATERIAL_IMPLICATION}
 
     static boolean eval(Node node, Map<Variable, Boolean> interpretation) {
         switch (node.nodeType) {
