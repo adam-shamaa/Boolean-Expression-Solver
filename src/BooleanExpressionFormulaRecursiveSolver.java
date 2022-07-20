@@ -126,7 +126,7 @@ public class BooleanExpressionFormulaRecursiveSolver {
     static public void runTests() {
         // Create Graph
         // represents the expression:
-        //  (((x1 <-> ~x2) -> x3) and (x4))
+        //  ((((x1 <-> ~x2) -> x3) AND (x4))) OR false
         OperatorNode rootNode =
                 new OperatorNode(Operator.OR,
                     new OperatorNode(Operator.AND,
